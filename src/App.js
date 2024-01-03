@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Meal from "./Meal";
+import NavBar from "./NavBar";
+import RandomMeal from "./RandomMeal";
+import { useState } from "react";
+import axios from "axios";
 
 function App() {
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    const response = await axios.get(
+      "https://www.themealdb.com/api/json/v1/1/random.php"
+    );
+    setData(response.data.meals);
+  };
+
+  const handleClick = () => {
+    fetchData();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NavBar />
+      <Meal handleClick={handleClick} />
+      {data.length > 0 && <RandomMeal data={data} />}
     </div>
   );
 }
